@@ -67,8 +67,7 @@ def draw_right_panel(screen, analysis_result, BOARD_LEFT_X, SQUARE_SIZE):
         move = format_move(data["move"])
         score = data["score"]
         nodes = data["nodes"]
-        time = round(data["time"], 4)
-
+        time = f"{data['time']:.3f}"
         # CARD
         pygame.draw.rect(screen, CARD_BG,
                          (panel_x + 10, y, panel_w - 20, 70),
@@ -134,10 +133,15 @@ def draw_right_panel(screen, analysis_result, BOARD_LEFT_X, SQUARE_SIZE):
                              border_radius=3)
 
             # VALUE
-            val_text = text_font.render(str(val), True, TEXT_MID)
+            if key == "time":
+                display_val = f"{val:.3f}"
+            else:
+                display_val = str(val)
+            
+            val_text = text_font.render(display_val, True, TEXT_MID)
             screen.blit(val_text,
                         (panel_x + panel_w - val_text.get_width() - 10, y))
-
+            
             y += 18
 
         y += 5
