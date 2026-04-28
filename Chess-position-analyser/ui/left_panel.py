@@ -1,14 +1,16 @@
 import pygame
 
-def draw_left_panel(screen, PIECE_IMAGES, turn, SQUARE_SIZE):
+def draw_left_panel(screen, PIECE_IMAGES, turn, SQUARE_SIZE,
+                   presets, selected_preset, dropdown_open):
 
     panel_x = 40
     panel_y = 80
     panel_w = 160
-    panel_h = 8 * SQUARE_SIZE   # increased so nothing gets cut
+    panel_h = 8 * SQUARE_SIZE
 
-    # ===== BACKGROUND =====
-    pygame.draw.rect(screen, (255,255,255), (panel_x-10, panel_y-10, panel_w, panel_h), border_radius=12)
+    pygame.draw.rect(screen, (255,255,255),
+                     (panel_x-10, panel_y-10, panel_w, panel_h),
+                     border_radius=12)
 
     font = pygame.font.SysFont("Arial", 14, bold=True)
     text_font = pygame.font.SysFont("Arial", 14)
@@ -35,11 +37,8 @@ def draw_left_panel(screen, PIECE_IMAGES, turn, SQUARE_SIZE):
 
             rects.append((p, rect))
 
-        # ✅ CORRECT ROW CALCULATION
         rows = (len(pieces) + 1) // 2
-        new_y = start_y + rows * (size + gap)
-
-        return rects, new_y
+        return rects, start_y + rows * (size + gap)
 
     y = panel_y
 
@@ -53,27 +52,33 @@ def draw_left_panel(screen, PIECE_IMAGES, turn, SQUARE_SIZE):
     y = draw_section("BLACK", y)
     black_rects, y = draw_piece_grid(["bK","bQ","bR","bB","bN","bP"], y)
 
-    y += 15   # tighter spacing (no ugly gap)
+    y += 15
 
     # ===== TURN =====
     y = draw_section("TURN", y)
 
-    white_btn = pygame.Rect(panel_x, y, 120, 40)
-    black_btn = pygame.Rect(panel_x, y+50, 120, 40)
+    radius = 10
 
-    w_color = (220,220,255) if turn == "w" else (240,240,240)
-    b_color = (220,220,255) if turn == "b" else (240,240,240)
+    white_center = (panel_x + 20, y + 12)
+    black_center = (panel_x + 90, y + 12)
 
-    pygame.draw.rect(screen, w_color, white_btn, border_radius=10)
-    pygame.draw.rect(screen, b_color, black_btn, border_radius=10)
+    pygame.draw.circle(screen, (120,100,110), white_center, radius, 2)
+    pygame.draw.circle(screen, (120,100,110), black_center, radius, 2)
 
-    pygame.draw.rect(screen, (120,100,110), white_btn, 2, border_radius=10)
-    pygame.draw.rect(screen, (120,100,110), black_btn, 2, border_radius=10)
+    if turn == "w":
+        pygame.draw.circle(screen, (120,100,110), white_center, radius-4)
+    else:
+        pygame.draw.circle(screen, (120,100,110), black_center, radius-4)
 
-    screen.blit(text_font.render("White", True, (0,0,0)), (white_btn.x+35, white_btn.y+10))
-    screen.blit(text_font.render("Black", True, (0,0,0)), (black_btn.x+35, black_btn.y+10))
+    screen.blit(text_font.render("W", True, (0,0,0)),
+                (white_center[0] + 12, white_center[1] - 8))
+    screen.blit(text_font.render("B", True, (0,0,0)),
+                (black_center[0] + 12, black_center[1] - 8))
 
-    y += 105
+    white_btn = pygame.Rect(white_center[0]-radius, white_center[1]-radius, radius*2, radius*2)
+    black_btn = pygame.Rect(black_center[0]-radius, black_center[1]-radius, radius*2, radius*2)
+
+    y += 30
 
     # ===== ANALYSE BUTTON =====
     analyse_btn = pygame.Rect(panel_x, y, 120, 45)
@@ -84,6 +89,49 @@ def draw_left_panel(screen, PIECE_IMAGES, turn, SQUARE_SIZE):
     screen.blit(text_font.render("Analyse", True, (255,255,255)),
                 (analyse_btn.x+28, analyse_btn.y+12))
 
+    y += 60
+
+    # ===== PRESET DROPDOWN =====
+    y = draw_section("PRESET", y)
+
+    box_w = 120
+    box_h = 30
+
+    dropdown_rect = pygame.Rect(panel_x, y, box_w, box_h)
+
+    pygame.draw.rect(screen, (240,240,240), dropdown_rect, border_radius=8)
+    pygame.draw.rect(screen, (120,100,110), dropdown_rect, 2, border_radius=8)
+
+    label = selected_preset if selected_preset else "Select"
+    screen.blit(text_font.render(label, True, (0,0,0)),
+                (dropdown_rect.x + 10, dropdown_rect.y + 6))
+
+    pygame.draw.polygon(screen, (0,0,0), [
+        (dropdown_rect.right - 15, dropdown_rect.y + 10),
+        (dropdown_rect.right - 5, dropdown_rect.y + 10),
+        (dropdown_rect.right - 10, dropdown_rect.y + 18)
+    ])
+
+    option_rects = []
+
+    if dropdown_open:
+        for i, key in enumerate(presets.keys()):
+            rect = pygame.Rect(panel_x,
+                               y + (i + 1) * box_h,
+                               box_w,
+                               box_h)
+
+            pygame.draw.rect(screen, (255,255,255), rect, border_radius=6)
+            pygame.draw.rect(screen, (120,100,110), rect, 1, border_radius=6)
+
+            screen.blit(text_font.render(key, True, (0,0,0)),
+                        (rect.x + 10, rect.y + 6))
+
+            option_rects.append((key, rect))
+
+    y += box_h + 10
+
+    # ===== FIXED MISSING VARIABLE =====
     palette = white_rects + black_rects
 
-    return white_btn, black_btn, analyse_btn, palette
+    return white_btn, black_btn, analyse_btn, palette, dropdown_rect, option_rects

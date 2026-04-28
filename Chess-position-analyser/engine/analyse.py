@@ -33,44 +33,40 @@ def analyse_position(ui_board, turn):
     final_score = a_score
 
     return {
-        "score": final_score, 
-
-        "details": {          
-            "greedy": {
-                "move": g_move,
-                "score": g_score,
-                "nodes": g_nodes,
-                "time": g_time
-            },
-            "minimax": {
-                "move": m_move,
-                "score": m_score,
-                "nodes": m_nodes,
-                "time": m_time
-            },
-            "alphabeta": {
-                "move": a_move,
-                "score": a_score,
-                "nodes": a_nodes,
-                "time": a_time
-            },
-            "iddfs": {
-                "move": i_move,
-                "score": i_score,
-                "nodes": i_nodes,
-                "time": i_time
-            },
-            "negascout": {
-                "move": n_move,
-                "score": n_score,
-                "nodes": n_nodes,
-                "time": n_time
-            },
-            "pvs": {
-                "move": p_move,
-                "score": p_score,
-                "nodes": p_nodes,
-                "time": p_time
-            }
-        }
+    "greedy": {
+        "move": g_move,
+        "score": g_score,
+        "nodes": g_nodes,
+        "time": g_time
+    },
+    "minimax": {
+        "move": m_move,
+        "score": m_score,
+        "nodes": m_nodes,
+        "time": m_time
+    },
+    "alphabeta": {
+        "move": a_move,
+        "score": a_score,
+        "nodes": a_nodes,
+        "time": a_time
+    },
+    "iddfs": {
+        "move": i_move,
+        "score": i_score,
+        "nodes": i_nodes,
+        "time": i_time
+    },
+    "negascout": {
+        "move": n_move,
+        "score": n_score,
+        "nodes": n_nodes,
+        "time": n_time
+    },
+    "pvs": {
+        "move": p_move,
+        "score": p_score,
+        "nodes": p_nodes,
+        "time": p_time
     }
+}

@@ -106,7 +106,7 @@ def draw_right_panel(screen, analysis_result, BOARD_LEFT_X, SQUARE_SIZE):
 
 
 
-        
+
         # ===== TIME COMPARISON =====
     y += 10
 
@@ -125,8 +125,12 @@ def draw_right_panel(screen, analysis_result, BOARD_LEFT_X, SQUARE_SIZE):
     algos = ["greedy", "minimax", "alphabeta", "iddfs", "negascout", "pvs"]
 
     # max time for normalization
-    max_time = max(analysis_result[a]["time"] for a in algos if a in analysis_result)
+    valid_times = [analysis_result[a]["time"] for a in algos if a in analysis_result]
 
+    if not valid_times:
+        return   # nothing to draw yet
+
+    max_time = max(valid_times)
     for algo in algos:
         if algo not in analysis_result:
             continue
