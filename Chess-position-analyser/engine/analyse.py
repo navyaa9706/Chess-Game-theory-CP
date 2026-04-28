@@ -33,9 +33,9 @@ def analyse_position(ui_board, turn):
     final_score = a_score
 
     return {
-        "score": final_score,   # ✅ for eval bar
+        "score": final_score, 
 
-        "details": {            # ✅ for right panel
+        "details": {          
             "greedy": {
                 "move": g_move,
                 "score": g_score,
