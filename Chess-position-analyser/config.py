@@ -20,7 +20,7 @@ BOARD_WIDTH  = COLS * SQUARE_SIZE   # 576
 BG_COLOR  = (232, 210, 218)
 LIGHT_SQ  = (248, 238, 242)
 DARK_SQ   = (188, 110, 130)
-=======
+
 import pygame
 
 # Window — extra width for the larger panel

@@ -7,7 +7,7 @@ from ui.right_panel   import draw_right_panel
 from ui.input_handler import handle_input
 from ui.utils         import coord_to_square
 from ui.assets_loader import load_images
-from ui.eval_bar import EvalBar
+from ui.eval_bar      import EvalBar
 
 from config import (
     WIDTH, HEIGHT, BG_COLOR,
@@ -22,13 +22,17 @@ pygame.display.set_caption("Chess Position Analyzer")
 
 PIECE_IMAGES = load_images()
 
+# ===== GAME STATE =====
 board = [[None] * COLS for _ in range(ROWS)]
 
 dragging_piece = None
 old_r, old_c   = None, None
 turn           = "w"
-analysis_result = None
 
+analysis_result = None   # for right panel
+eval_score = 0           # for eval bar
+
+# ===== PIECE LIMITS =====
 piece_limits = {
     "wK": 1, "wQ": 1, "wR": 2, "wB": 2, "wN": 2, "wP": 8,
     "bK": 1, "bQ": 1, "bR": 2, "bB": 2, "bN": 2, "bP": 8,
@@ -36,9 +40,9 @@ piece_limits = {
 piece_count = {k: 0 for k in piece_limits}
 palette     = []
 
+# ===== UI =====
 title_font = pygame.font.SysFont("Georgia", 24, bold=True)
 clock      = pygame.time.Clock()
-
 
 eval_bar = EvalBar(
     x=BOARD_LEFT_X + 8 * SQUARE_SIZE + 5,
@@ -46,9 +50,8 @@ eval_bar = EvalBar(
     width=20,
     height=BOARD_HEIGHT
 )
-analysis_result = None
-eval_score = 0
 
+# ================= MAIN LOOP =================
 while True:
     screen.fill(BG_COLOR)
 
@@ -70,17 +73,17 @@ while True:
 
     # ===== LEFT PANEL =====
     white_btn, black_btn, analyse_btn, palette = draw_left_panel(
-    screen, PIECE_IMAGES, turn, SQUARE_SIZE
+        screen, PIECE_IMAGES, turn, SQUARE_SIZE
     )
-    
-    #======EVAL BAR======
-    eval_bar.draw(screen)
 
     # ===== RIGHT PANEL =====
     draw_right_panel(
         screen, analysis_result,
         BOARD_LEFT_X, SQUARE_SIZE
     )
+
+    # ===== EVAL BAR =====
+    eval_bar.draw(screen)
 
     # ===== STATE =====
     state = {
@@ -103,11 +106,14 @@ while True:
     }
 
     # ===== INPUT =====
-    dragging_piece, old_r, old_c, turn, analysis_result = handle_input(events, state)
-    if isinstance(analysis_result, dict):
-        eval_score = analysis_result["score"]
-        analysis_result = analysis_result["result"]
+    dragging_piece, old_r, old_c, turn, raw_result = handle_input(events, state)
 
+    # ===== PROCESS ANALYSIS RESULT =====
+    if isinstance(raw_result, dict) and "score" in raw_result:
+        eval_score = raw_result["score"]
+        analysis_result = raw_result["details"]
+
+    # ===== UPDATE EVAL BAR =====
     eval_bar.update(eval_score)
 
     # ===== DRAG GHOST =====

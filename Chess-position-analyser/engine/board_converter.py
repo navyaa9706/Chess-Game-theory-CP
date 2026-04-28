@@ -34,7 +34,6 @@ def board_to_fen(board, turn="w"):
     fen += f" {turn} - - 0 1"
 
     return fen
-=======
 def board_to_fen(board, turn="w"):
     piece_map = {
         "wP":"P","wR":"R","wN":"N","wB":"B","wQ":"Q","wK":"K",

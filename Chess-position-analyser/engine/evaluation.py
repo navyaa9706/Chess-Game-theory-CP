@@ -69,7 +69,7 @@ def evaluate_piece_activity(board):
         activity_score = 0.05 * mobility
         score += activity_score if color == chess.WHITE else -activity_score
     return score
-=======
+
 def evaluate_board(board):
     values = {"P":1,"N":3,"B":3,"R":5,"Q":9,"K":100}
     score = 0
