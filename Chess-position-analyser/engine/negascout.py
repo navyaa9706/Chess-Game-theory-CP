@@ -32,12 +32,6 @@ def analyse_position_negascout(ui_board, turn):
 
     total_time = time.time() - start
 
-    print("\nNEGASCOUT")
-    print("Best Move:", best_move)
-    print("Score:", best_score)
-    print("Nodes:", nodes)
-    print("Time:", round(total_time, 5), "sec")
-
     return best_move, best_score, nodes, total_time
 
 
