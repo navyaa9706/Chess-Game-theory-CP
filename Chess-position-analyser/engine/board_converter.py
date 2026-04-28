@@ -1,4 +1,14 @@
+import chess
+
 def board_to_fen(board, turn="w"):
+    if isinstance(board, chess.Board):
+        fen = board.fen()
+
+        # Replace turn if needed
+        parts = fen.split(" ")
+        parts[1] = turn
+        return " ".join(parts)
+    
     piece_map = {
         "wP":"P","wR":"R","wN":"N","wB":"B","wQ":"Q","wK":"K",
         "bP":"p","bR":"r","bN":"n","bB":"b","bQ":"q","bK":"k"

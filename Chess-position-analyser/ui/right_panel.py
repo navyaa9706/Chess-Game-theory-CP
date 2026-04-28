@@ -52,8 +52,9 @@ def _rounded_rect(w, h, color, r):
 
 # ── MAIN DRAW FUNCTION ───────────────────────────────────
 def draw_right_panel(screen, analysis_result, BOARD_LEFT_X, SQUARE_SIZE):
-
-    panel_x = BOARD_LEFT_X + 8 * SQUARE_SIZE + 40
+    EVAL_BAR_WIDTH = 20
+    GAP = 10
+    panel_x = BOARD_LEFT_X + 8 * SQUARE_SIZE + EVAL_BAR_WIDTH + GAP + 40
     panel_y = 80
     panel_w = 300
     panel_h = 8 * SQUARE_SIZE   # EXACT BOARD HEIGHT

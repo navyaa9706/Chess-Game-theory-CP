@@ -1,7 +1,7 @@
 import pygame
 
 # Window — extra width for the larger panel
-WIDTH  = 1200
+WIDTH  = 1240   #added + 20 for eval bar + 20 for gaps
 HEIGHT = 780
 
 # Board layout

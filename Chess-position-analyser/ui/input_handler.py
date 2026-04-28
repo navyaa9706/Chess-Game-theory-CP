@@ -1,10 +1,14 @@
 import pygame
+import chess
+
 from engine.analyse import analyse_position
+from engine.evaluation import evaluate_board
+from engine.board_converter import board_to_fen
 
 
 def handle_input(events, state):
 
-    board        = state["board"]
+    board        = state["board"]            # 2D UI board
     palette      = state["palette"]
     coord_to_sq  = state["coord_to_square"]
     piece_count  = state["piece_count"]
@@ -19,7 +23,6 @@ def handle_input(events, state):
     black_btn   = state["black_btn"]
     analyse_btn = state["analyse_btn"]
 
-    # fallback if not present
     analysis_result = state.get("analysis_result", None)
 
     for event in events:
@@ -28,7 +31,7 @@ def handle_input(events, state):
         if event.type == pygame.MOUSEBUTTONDOWN:
             mx, my = event.pos
 
-            # ✅ TURN SELECT
+            # Switch turn
             if white_btn and white_btn.collidepoint(mx, my):
                 turn = "w"
                 continue
@@ -37,18 +40,31 @@ def handle_input(events, state):
                 turn = "b"
                 continue
 
-            # ✅ ANALYSE BUTTON
+            # ── ANALYSE BUTTON ─────────────────────────────
             if analyse_btn and analyse_btn.collidepoint(mx, my):
 
+                # Validate board (must have both kings)
                 flat = [p for row in board for p in row]
                 if "wK" not in flat or "bK" not in flat:
                     print("Invalid board: both kings required")
                     continue
 
-                analysis_result = analyse_position(board, turn)
+                # Convert to chess.Board
+                fen = board_to_fen(board)
+                chess_board = chess.Board(fen)
+
+                # Compute evaluation + analysis
+                score = evaluate_board(chess_board)
+                analysis = analyse_position(chess_board, turn)
+
+                # Return both cleanly
+                analysis_result = {
+                    "score": score,
+                    "result": analysis
+                }
                 continue
 
-            # ✅ PALETTE PICK (FIXED — THIS WAS BROKEN)
+            # ── PICK FROM PALETTE ─────────────────────────
             picked = False
             for p, rect in palette:
                 if rect.collidepoint(mx, my):
@@ -63,7 +79,7 @@ def handle_input(events, state):
             if picked:
                 continue
 
-            # ✅ BOARD PICK
+            # ── PICK FROM BOARD ───────────────────────────
             square = coord_to_sq((mx, my))
             if square:
                 r, c = square

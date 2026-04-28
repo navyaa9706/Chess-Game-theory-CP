@@ -7,6 +7,7 @@ from ui.right_panel   import draw_right_panel
 from ui.input_handler import handle_input
 from ui.utils         import coord_to_square
 from ui.assets_loader import load_images
+from ui.eval_bar import EvalBar
 
 from config import (
     WIDTH, HEIGHT, BG_COLOR,
@@ -39,6 +40,15 @@ title_font = pygame.font.SysFont("Georgia", 24, bold=True)
 clock      = pygame.time.Clock()
 
 
+eval_bar = EvalBar(
+    x=BOARD_LEFT_X + 8 * SQUARE_SIZE + 5,
+    y=BOARD_TOP_Y,
+    width=20,
+    height=BOARD_HEIGHT
+)
+analysis_result = None
+eval_score = 0
+
 while True:
     screen.fill(BG_COLOR)
 
@@ -62,6 +72,9 @@ while True:
     white_btn, black_btn, analyse_btn, palette = draw_left_panel(
     screen, PIECE_IMAGES, turn, SQUARE_SIZE
     )
+    
+    #======EVAL BAR======
+    eval_bar.draw(screen)
 
     # ===== RIGHT PANEL =====
     draw_right_panel(
@@ -91,6 +104,11 @@ while True:
 
     # ===== INPUT =====
     dragging_piece, old_r, old_c, turn, analysis_result = handle_input(events, state)
+    if isinstance(analysis_result, dict):
+        eval_score = analysis_result["score"]
+        analysis_result = analysis_result["result"]
+
+    eval_bar.update(eval_score)
 
     # ===== DRAG GHOST =====
     if dragging_piece and dragging_piece in PIECE_IMAGES:
