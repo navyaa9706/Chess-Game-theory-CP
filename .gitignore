@@ -1,0 +1,55 @@
+# ===== Python =====
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# ===== Virtual Environment =====
+venv/
+.env/
+.env.*
+
+# ===== VS Code =====
+.vscode/
+
+# ===== OS Files =====
+.DS_Store
+Thumbs.db
+
+# ===== Logs =====
+*.log
+
+# ===== Build / Dist =====
+build/
+dist/
+*.egg-info/
+
+# ===== Jupyter (just in case) =====
+.ipynb_checkpoints/
+
+# ===== Cache =====
+.cache/
+
+# ===== Testing =====
+.pytest_cache/
+
+# ===== Temporary Files =====
+*.tmp
+*.bak
+
+# ===== Python Packaging =====
+*.whl
+
+# ===== MyPy / Type Check =====
+.mypy_cache/
+
+# ===== Coverage =====
+htmlcov/
+.coverage
+
+# ===== Local config =====
+*.env
+
+# ===== Assets (optional) =====
+# Uncomment if you don't want to upload images
+# assets/images/
