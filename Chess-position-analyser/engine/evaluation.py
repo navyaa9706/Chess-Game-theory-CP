@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import chess
 
 
@@ -83,4 +82,3 @@ def evaluate_board(board):
             score -= val
 
     return score
->>>>>>> b2b86a5855560c379b5274914dc1441a1715e3ae

@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import pygame
 
 # ── THEME (MATCHES YOUR UI) ──────────────────────────────
@@ -348,6 +347,4 @@ def draw_right_panel(screen, analysis_result, BOARD_LEFT_X, SQUARE_SIZE):
                         (panel_x + panel_w - val_text.get_width() - 10, y))
             
             y += 18
-
->>>>>>> b2b86a5855560c379b5274914dc1441a1715e3ae
         y += 5

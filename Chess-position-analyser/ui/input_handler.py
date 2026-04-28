@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import pygame
 import chess
 
@@ -234,4 +233,3 @@ def handle_input(events, state):
             old_r, old_c   = None, None
 
     return dragging_piece, old_r, old_c, turn, analysis_result
->>>>>>> b2b86a5855560c379b5274914dc1441a1715e3ae

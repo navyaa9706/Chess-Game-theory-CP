@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import chess
 
 def board_to_fen(board, turn="w"):
@@ -62,4 +61,4 @@ def board_to_fen(board, turn="w"):
     fen += f" {turn} - - 0 1"
 
     return fen
->>>>>>> b2b86a5855560c379b5274914dc1441a1715e3ae
+
