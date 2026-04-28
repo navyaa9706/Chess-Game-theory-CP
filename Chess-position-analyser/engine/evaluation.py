@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import chess
 
 
@@ -69,3 +70,17 @@ def evaluate_piece_activity(board):
         activity_score = 0.05 * mobility
         score += activity_score if color == chess.WHITE else -activity_score
     return score
+=======
+def evaluate_board(board):
+    values = {"P":1,"N":3,"B":3,"R":5,"Q":9,"K":100}
+    score = 0
+
+    for piece in board.piece_map().values():
+        val = values[piece.symbol().upper()]
+        if piece.color:
+            score += val
+        else:
+            score -= val
+
+    return score
+>>>>>>> b2b86a5855560c379b5274914dc1441a1715e3ae
