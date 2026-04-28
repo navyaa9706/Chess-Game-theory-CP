@@ -13,6 +13,9 @@ ALGO_COLORS = {
     "greedy": (180, 110, 140),
     "minimax": (150, 90, 120),
     "alphabeta": (130, 70, 100),
+    "iddfs": (160, 120, 160),
+    "negascout": (140, 100, 140),
+    "pvs": (120, 80, 130),
 }
 
 
@@ -38,8 +41,8 @@ def draw_right_panel(screen, analysis_result, BOARD_LEFT_X, SQUARE_SIZE):
 
     # ===== FONTS =====
     title_font = pygame.font.SysFont("Georgia", 14, bold=True)
-    text_font = pygame.font.SysFont("Arial", 12)
-    move_font = pygame.font.SysFont("Arial", 18, bold=True)
+    text_font = pygame.font.SysFont("Arial", 11)
+    move_font = pygame.font.SysFont("Arial", 16, bold=True)
 
     # ===== TITLE =====
     screen.blit(title_font.render("ANALYSIS", True, TEXT_MID),
@@ -58,9 +61,14 @@ def draw_right_panel(screen, analysis_result, BOARD_LEFT_X, SQUARE_SIZE):
         return
 
     # ===== ALGO CARDS =====
+    algos = ["greedy", "minimax", "alphabeta", "iddfs", "negascout", "pvs"]
+
     y = panel_y + 45
 
-    for algo in ["greedy", "minimax", "alphabeta"]:
+    for algo in algos:
+
+        if algo not in analysis_result:
+            continue
 
         data = analysis_result[algo]
 
@@ -68,80 +76,86 @@ def draw_right_panel(screen, analysis_result, BOARD_LEFT_X, SQUARE_SIZE):
         score = data["score"]
         nodes = data["nodes"]
         time = f"{data['time']:.3f}"
-        # CARD
+
+        # CARD (smaller height so all 6 fit)
         pygame.draw.rect(screen, CARD_BG,
-                         (panel_x + 10, y, panel_w - 20, 70),
+                         (panel_x + 10, y, panel_w - 20, 55),
                          border_radius=10)
 
         pygame.draw.rect(screen, BORDER,
-                         (panel_x + 10, y, panel_w - 20, 70),
+                         (panel_x + 10, y, panel_w - 20, 55),
                          1, border_radius=10)
 
         # HEADER
         screen.blit(text_font.render(algo.upper(), True, ALGO_COLORS[algo]),
-                    (panel_x + 20, y + 5))
+                    (panel_x + 20, y + 4))
 
         # MOVE
         screen.blit(move_font.render(move, True, TEXT_DARK),
-                    (panel_x + 20, y + 25))
+                    (panel_x + 20, y + 20))
 
         # STATS
         stats = f"S:{score}  N:{nodes}  T:{time}s"
         screen.blit(text_font.render(stats, True, TEXT_MID),
-                    (panel_x + 20, y + 48))
+                    (panel_x + 20, y + 38))
 
-        y += 80
+        y += 60
 
-    # ===== COMPARISON =====
-    y += 5
+
+
+
+
+
+        
+        # ===== TIME COMPARISON =====
+    y += 10
+
     pygame.draw.line(screen, BORDER,
                      (panel_x + 10, y),
                      (panel_x + panel_w - 10, y), 1)
 
     y += 10
 
-    max_nodes = max(a["nodes"] for a in analysis_result.values())
-    max_time = max(a["time"] for a in analysis_result.values())
+    label_font = pygame.font.SysFont("Arial", 11, bold=True)
+    screen.blit(label_font.render("TIME COMPARISON", True, TEXT_LIGHT),
+                (panel_x + 15, y))
 
-    for label, key, max_val in [
-        ("Nodes", "nodes", max_nodes),
-        ("Time", "time", max_time)
-    ]:
+    y += 18
 
-        screen.blit(text_font.render(label, True, TEXT_LIGHT),
+    algos = ["greedy", "minimax", "alphabeta", "iddfs", "negascout", "pvs"]
+
+    # max time for normalization
+    max_time = max(analysis_result[a]["time"] for a in algos if a in analysis_result)
+
+    for algo in algos:
+        if algo not in analysis_result:
+            continue
+
+        val = analysis_result[algo]["time"]
+
+        # normalize
+        ratio = val / max_time if max_time > 0 else 0
+        bar_width = int(160 * ratio)
+
+        # label
+        screen.blit(label_font.render(algo[:6], True, TEXT_MID),
                     (panel_x + 15, y))
-        y += 15
 
-        for algo in ["greedy", "minimax", "alphabeta"]:
+        # background bar
+        pygame.draw.rect(screen, (230, 210, 220),
+                         (panel_x + 90, y + 5, 160, 6),
+                         border_radius=3)
 
-            val = analysis_result[algo][key]
+        # filled bar
+        pygame.draw.rect(screen, ALGO_COLORS[algo],
+                         (panel_x + 90, y + 5, bar_width, 6),
+                         border_radius=3)
 
-            ratio = val / max_val if max_val else 0
-            bar_width = int(150 * ratio)
+        # rounded time
+        display_val = f"{val:.3f}s"
 
-            # LABEL
-            screen.blit(text_font.render(algo[:5], True, TEXT_MID),
-                        (panel_x + 15, y))
+        val_text = label_font.render(display_val, True, TEXT_MID)
+        screen.blit(val_text,
+                    (panel_x + panel_w - val_text.get_width() - 10, y))
 
-            # BAR
-            pygame.draw.rect(screen, (230, 210, 220),
-                             (panel_x + 80, y + 5, 150, 6),
-                             border_radius=3)
-
-            pygame.draw.rect(screen, ALGO_COLORS[algo],
-                             (panel_x + 80, y + 5, bar_width, 6),
-                             border_radius=3)
-
-            # VALUE
-            if key == "time":
-                display_val = f"{val:.3f}"
-            else:
-                display_val = str(val)
-            
-            val_text = text_font.render(display_val, True, TEXT_MID)
-            screen.blit(val_text,
-                        (panel_x + panel_w - val_text.get_width() - 10, y))
-            
-            y += 18
-
-        y += 5
+        y += 18
