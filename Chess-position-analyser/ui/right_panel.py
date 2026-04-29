@@ -19,7 +19,6 @@ ALGO_COLORS = {
 }
 
 
-# ===== HELPER =====
 def format_move(move):
     move = str(move)
     if len(move) == 4:
@@ -77,7 +76,7 @@ def draw_right_panel(screen, analysis_result, BOARD_LEFT_X, SQUARE_SIZE):
         nodes = data["nodes"]
         time = f"{data['time']:.3f}"
 
-        # CARD (smaller height so all 6 fit)
+        # CARD 
         pygame.draw.rect(screen, CARD_BG,
                          (panel_x + 10, y, panel_w - 20, 55),
                          border_radius=10)

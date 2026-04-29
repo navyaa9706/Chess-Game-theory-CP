@@ -14,12 +14,10 @@ def draw_board(screen, BOARD_TOP_Y, BOARD_LEFT_X, SQUARE_SIZE):
 
             pygame.draw.rect(screen, color, (x, y, SQUARE_SIZE, SQUARE_SIZE))
 
-            # rank numbers (8 → 1) on the left edge of column 0
             if col == 0:
                 text = font.render(str(8 - row), True, LABEL_COLOR)
                 screen.blit(text, (x - 22, y + SQUARE_SIZE // 2 - 8))
 
-            # file letters (a → h) below row 7
             if row == 7:
                 letter = chr(ord('a') + col)
                 text = font.render(letter, True, LABEL_COLOR)
@@ -51,9 +49,9 @@ def draw_palette(screen, PIECE_IMAGES, BOARD_LEFT_X, BOARD_TOP_Y, SQUARE_SIZE):
 
     BOARD_BOTTOM = BOARD_TOP_Y + 8 * SQUARE_SIZE
     ICON_SIZE    = 48
-    H_GAP        = 14          # gap between icons
-    ROW_GAP      = 10          # gap between white row and black row
-    TOP_MARGIN   = 20          # space below board
+    H_GAP        = 14          
+    ROW_GAP      = 10         
+    TOP_MARGIN   = 20         
 
     white_y = BOARD_BOTTOM + TOP_MARGIN
     black_y = white_y + ICON_SIZE + ROW_GAP

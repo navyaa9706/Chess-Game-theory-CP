@@ -83,8 +83,8 @@ def draw_left_panel(screen, PIECE_IMAGES, turn, SQUARE_SIZE,
     # ===== ANALYSE BUTTON =====
     analyse_btn = pygame.Rect(panel_x, y, 120, 45)
 
-    pygame.draw.rect(screen, (180,150,170), analyse_btn, border_radius=10)
-    pygame.draw.rect(screen, (120,100,110), analyse_btn, 2, border_radius=10)
+    pygame.draw.rect(screen, (200, 110, 130), analyse_btn, border_radius=10)
+    pygame.draw.rect(screen, (120, 60, 80), analyse_btn, 2, border_radius=10)
 
     screen.blit(text_font.render("Analyse", True, (255,255,255)),
                 (analyse_btn.x+28, analyse_btn.y+12))
@@ -131,7 +131,6 @@ def draw_left_panel(screen, PIECE_IMAGES, turn, SQUARE_SIZE,
 
     y += box_h + 10
 
-    # ===== FIXED MISSING VARIABLE =====
     palette = white_rects + black_rects
 
     return white_btn, black_btn, analyse_btn, palette, dropdown_rect, option_rects

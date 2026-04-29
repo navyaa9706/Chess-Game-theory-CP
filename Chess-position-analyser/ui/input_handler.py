@@ -44,15 +44,58 @@ def handle_input(events, state):
                 turn = "b"
                 continue
 
-            # ---- ANALYSE (KEEP THIS ABOVE DROPDOWN) ----
+            # ---- ANALYSE BUTTON ----
             if analyse_btn and analyse_btn.collidepoint(mx, my):
 
                 flat = [p for row in board for p in row]
 
+                # both kings must exist
                 if "wK" not in flat or "bK" not in flat:
                     print("Invalid board: both kings required")
                     continue
 
+                # pawns cannot be on 1st or 8th rank
+                for col in range(8):
+                    if board[0][col] in ("wP", "bP") or board[7][col] in ("wP", "bP"):
+                        print("Invalid board: pawns cannot be on 1st or 8th rank")
+                        continue
+
+                from engine.board_converter import board_to_fen
+                import chess
+
+                fen = board_to_fen(board, turn)
+                chess_board = chess.Board(fen)
+
+                # kings cannot be adjacent
+                wk = chess_board.king(chess.WHITE)
+                bk = chess_board.king(chess.BLACK)
+
+                if wk is not None and bk is not None:
+                    if chess.square_distance(wk, bk) <= 1:
+                        print("Invalid board: kings cannot be adjacent")
+                        continue
+
+                # both kings cannot be in check simultaneously
+                temp = chess_board.copy()
+                temp.turn = chess.WHITE
+                white_in_check = temp.is_check()
+
+                temp.turn = chess.BLACK
+                black_in_check = temp.is_check()
+
+                if white_in_check and black_in_check:
+                    print("Invalid board: both kings cannot be in check")
+                    continue
+
+                # wrong side to move while in check
+                if chess_board.is_check():
+                    correct_turn = "w" if chess_board.turn == chess.WHITE else "b"
+
+                    if turn != correct_turn:
+                        print(f"Invalid turn: {correct_turn} must move (king is in check)")
+                        continue
+
+                # --- VALID POSITION → RUN ANALYSIS ---
                 analysis_result = analyse_position(board, turn)
                 continue
 
@@ -76,6 +119,7 @@ def handle_input(events, state):
 
                 if clicked_option:
                     continue
+
 
             # ---- PALETTE PICK ----
             picked = False

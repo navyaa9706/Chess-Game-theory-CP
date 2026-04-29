@@ -15,7 +15,6 @@ class EvalBar:
         max_eval = 10   # clamp range
         score = max(-max_eval, min(max_eval, self.score))
 
-        # convert score → ratio (0 to 1)
         ratio = (score + max_eval) / (2 * max_eval)
 
         white_height = int(self.rect.height * ratio)
@@ -48,11 +47,10 @@ class EvalBar:
         # ===== SCORE TEXT =====
         display_score = round(score, 2)
 
-        # text color depends on dominance
         if score > 0:
-            text_color = (0, 0, 0)      # white side → black text
+            text_color = (0, 0, 0)      
         else:
-            text_color = (255, 255, 255)  # black side → white text
+            text_color = (255, 255, 255) 
 
         text = self.font.render(str(display_score), True, text_color)
 
